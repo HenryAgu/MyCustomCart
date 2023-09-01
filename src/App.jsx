@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="w-11/12 xl:w-customWidth my-10 mx-auto">
       <ItemInput itemList={itemList}/>
-      <ItemDisplay itemList={itemList}/>
+      <ItemDisplay />
     </div>
   );
 }
