@@ -3,30 +3,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../features/Items";
 
 const ItemInput = ({ id, itemList }) => {
-  const [item, setItem] = useState(
-    JSON.parse(localStorage.getItem(item)) || ""
-  );
-  const [price, setPrice] = useState(
-    JSON.parse(localStorage.getItem(price) || "")
-  );
-  const [image, setImage] = useState(
-    JSON.parse(localStorage.getItem(image) || "")
-  );
-  // const [item, setItem] = useState("");
-  // const [price, setPrice] = useState("");
-  // const [image, setImage] = useState("");
+  const initialItem = JSON.parse(localStorage.getItem("item") || "");
+  const initialPrice = JSON.parse(localStorage.getItem("price") || "");
+  const initialImage = JSON.parse(localStorage.getItem("image") || "");
 
-  //  ================= Redux toolkit selector and dispatch =================
-  const data = useSelector((state) => state.items.value);
-  const dispatch = useDispatch();
+  const [item, setItem] = useState(initialItem);
+  const [price, setPrice] = useState(initialPrice);
+  const [image, setImage] = useState(initialImage);
 
   // ================ Local Storage =============================
   useEffect(() => {
     // storing form inputs
     localStorage.setItem("item", JSON.stringify(item));
+  }, [item]);
+
+  useEffect(() => {
     localStorage.setItem("price", JSON.stringify(price));
+  }, [price]);
+
+  useEffect(() => {
     localStorage.setItem("image", JSON.stringify(image));
-  }, [item, price, image]);
+  }, [image]);
+
+  //  ================= Redux toolkit selector and dispatch =================
+  const data = useSelector((state) => state.items.value);
+  const dispatch = useDispatch();
 
   //  ================= Image submission =================
   const handleImage = (e) => {
@@ -42,6 +43,22 @@ const ItemInput = ({ id, itemList }) => {
     }
   };
 
+  // ========== Form Submission =================
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(
+      addItem({
+        id: itemList[itemList.length - 1].id + 1,
+        image: image,
+        name: item,
+        price: price.toLocaleString(),
+      })
+    );
+    setItem("");
+    setImage("");
+    setPrice("");
+    console.log(price);
+  };
   return (
     <>
       <div className="mb-10">
