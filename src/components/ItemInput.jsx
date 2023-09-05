@@ -1,16 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../features/Items";
 
-const ItemInput = ({ id,itemList }) => {
-  const [item, setItem] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
+const ItemInput = ({ id, itemList }) => {
+  const [item, setItem] = useState(
+    JSON.parse(localStorage.getItem(item)) || ""
+  );
+  const [price, setPrice] = useState(
+    JSON.parse(localStorage.getItem(price) || "")
+  );
+  const [image, setImage] = useState(
+    JSON.parse(localStorage.getItem(image) || "")
+  );
+  // const [item, setItem] = useState("");
+  // const [price, setPrice] = useState("");
+  // const [image, setImage] = useState("");
 
- 
-  const data = useSelector((state)=> state.items.value)
+  //  ================= Redux toolkit selector and dispatch =================
+  const data = useSelector((state) => state.items.value);
   const dispatch = useDispatch();
 
+  // ================ Local Storage =============================
+  useEffect(() => {
+    // storing form inputs
+    localStorage.setItem("item", JSON.stringify(item));
+    localStorage.setItem("price", JSON.stringify(price));
+    localStorage.setItem("image", JSON.stringify(image));
+  }, [item, price, image]);
+
+  //  ================= Image submission =================
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -24,29 +42,10 @@ const ItemInput = ({ id,itemList }) => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(
-      addItem({
-        id: itemList[itemList.length - 1].id + 1,
-        image: image,
-        name: item,
-        price: price.toLocaleString(),
-      })
-    );
-    setItem("");
-    setImage("");
-    setPrice("");
-    console.log(price);
-  };
-  const totalData = () =>{
-    console.log(data);
-  }
   return (
     <>
       <div className="mb-10">
         <h4 className="text-xl font-medium mb-5 xl:text-2xl">Fill This Form</h4>
-        <button onClick={()=>totalData()}>button</button>
         <form
           action=""
           className="flex flex-col gap-y-2.5 md:w-2/4 xl:w-1/3"

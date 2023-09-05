@@ -15,12 +15,14 @@ const SingleComponent = ({ name, price, id,image }) => {
   const [priceVisibility, setPriceVisibility] = useState(false);
   const [newItem, setNewItem] = useState("");
   const [newPrice, setNewPrice] = useState("");
+  const dispatch = useDispatch();
+  
   return(
     <div className="shadow-lg rounded-xl p-5" key={id}>
     <GrClose
       className="mb-5 font-black cursor-pointer text-red-950"
       onClick={() => {
-        dispatch(deleteItem({ id: item.id }));
+        dispatch(deleteItem({ id: id }));
       }}
     />
     <img
@@ -54,7 +56,8 @@ const SingleComponent = ({ name, price, id,image }) => {
           <button
             className="bg-slate-800 p-2 rounded-xl text-slate-100"
             onClick={() => {
-              dispatch(updateItem({ id: item.id, item: newItem }));
+              dispatch(updateItem({ id: id, item: newItem }));
+              setNameVisibility(false);
             }}
           >
             Update Item Name
@@ -94,7 +97,8 @@ const SingleComponent = ({ name, price, id,image }) => {
           <button
             className="bg-slate-800 p-2 rounded-xl text-slate-100"
             onClick={() => {
-              dispatch(updatePrice({ id: item.id, price: newPrice }));
+              dispatch(updatePrice({ id: id, price: newPrice }));
+              setPriceVisibility(false);
             }}
           >
             Update Price
@@ -110,7 +114,8 @@ const ItemDisplay = () => {
   const [hideAccordion, setHideAccordion] = useState(true);
 
   const itemList = useSelector((state) => state.items.value);
-  const dispatch = useDispatch();
+  
+  const data = useSelector((state)=> state.items.value)
 
   // Handle Accordion
   const handleAccordion = () => {
@@ -130,15 +135,14 @@ const ItemDisplay = () => {
         <div className="grid gap-y-10 grid-cols-1 md:grid-cols-2 md:gap-x-10 xl:grid-cols-3 xl:gap-x-10">
           {itemList.map((item) => {
             return(
-              <>
+              <div key={item.id}>
               <SingleComponent 
               id={item.id}
-              key={item.id}
               name={item.name}
               image={item.image}
               price={item.price}
               />
-              </>
+              </div>
             )
             })}
         </div>
